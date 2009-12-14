@@ -5,8 +5,6 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import org.apache.hadoop.io.LongWritable;
-import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.InputSplit;
 
@@ -26,7 +24,6 @@ public class MultiRowInputSplit extends InputSplit implements Writable {
 	}
 	
 	public MultiRowInputSplit(long[] rows) {
-		// TODO Auto-generated constructor stub
 		this.rows=rows;
 		this.size = rows.length;
 	}
@@ -45,7 +42,6 @@ public class MultiRowInputSplit extends InputSplit implements Writable {
 	// Writable methods
 	@Override
 	public void readFields(DataInput in) throws IOException {
-		// TODO Auto-generated method stub
 		this.size = in.readInt();
 		this.rows = new long[size];
 		for(int i=0; i<size; i++){
@@ -55,7 +51,6 @@ public class MultiRowInputSplit extends InputSplit implements Writable {
 
 	@Override
 	public void write(DataOutput out) throws IOException {
-		// TODO Auto-generated method stub
 		out.writeInt(size);
 		for(int i=0; i<size; i++){
 			out.writeLong(rows[i]);
@@ -64,7 +59,6 @@ public class MultiRowInputSplit extends InputSplit implements Writable {
 	
 	@Override
 	public String[] getLocations() throws IOException, InterruptedException {
-		// TODO Auto-generated method stub
 		//return null;
 		return new String[]{};
 	}

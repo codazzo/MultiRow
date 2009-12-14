@@ -19,26 +19,24 @@ import org.apache.hadoop.mapreduce.TaskAttemptContext;
 public class MultiRowRecordReader extends RecordReader<LongWritable, Text> {
 	int pos;
 	long[] rows;
-	
+
 	public MultiRowRecordReader(MultiRowInputSplit hbis){
 		this.pos=-1;
 		this.rows=hbis.getRows();
 	}
-	
+
 	@Override
 	public void close() throws IOException {
-		
+
 	}
 
 	@Override
-	public LongWritable getCurrentKey() throws IOException,
-			InterruptedException {
+	public LongWritable getCurrentKey() throws IOException, InterruptedException {
 		return new LongWritable(rows[pos]);
 	}
 
 	@Override
-	public Text getCurrentValue() throws IOException,
-			InterruptedException {
+	public Text getCurrentValue() throws IOException, InterruptedException {
 		// we don't really use values for this input format
 		return new Text();
 		//return null;
@@ -50,8 +48,7 @@ public class MultiRowRecordReader extends RecordReader<LongWritable, Text> {
 	}
 
 	@Override
-	public void initialize(InputSplit arg0, TaskAttemptContext arg1)
-			throws IOException, InterruptedException {
+	public void initialize(InputSplit split, TaskAttemptContext context) throws IOException, InterruptedException {
 		//do we need anything here?
 	}
 
@@ -63,7 +60,7 @@ public class MultiRowRecordReader extends RecordReader<LongWritable, Text> {
 		}else{
 			return false;
 		}
-		
+
 	}
 
 }

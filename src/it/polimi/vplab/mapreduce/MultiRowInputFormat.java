@@ -40,7 +40,6 @@ public class MultiRowInputFormat extends InputFormat<LongWritable, Text>{
 		rows = myRows;
 	}
 
-	//how many rows to fetch at once
 
 	/**
 	 * Call this method before submitting the job to set the size of each input split.
@@ -52,34 +51,23 @@ public class MultiRowInputFormat extends InputFormat<LongWritable, Text>{
 	}
 
 	@Override
-	public RecordReader<LongWritable, Text> createRecordReader(
-			InputSplit arg0, TaskAttemptContext arg1) throws IOException,
-			InterruptedException {
-		return new MultiRowRecordReader((MultiRowInputSplit) arg0);
+	public RecordReader<LongWritable, Text> createRecordReader( InputSplit split, TaskAttemptContext context) throws IOException, InterruptedException {
+		return new MultiRowRecordReader((MultiRowInputSplit) split);
 	}
 
 	@Override
-	public List<InputSplit> getSplits(JobContext arg0) throws IOException,
-	InterruptedException {
-		// TODO Auto-generated method stub
+	public List<InputSplit> getSplits(JobContext arg0) throws IOException, InterruptedException {
 		ArrayList<InputSplit> res = new ArrayList<InputSplit>();
 
-		try{
-			for(int i=0; i<rows.length; i=i+size){
-				int newSize = Math.min(size, (Math.min(rows.length, i+size)-i)); //this... is actually right
+		for(int i=0; i<rows.length; i=i+size){
+			int newSize = Math.min(size, (Math.min(rows.length, i+size)-i)); //this... is actually right
 
-				long[] tempRows = new long[newSize];
-				for(int j=i; j<Math.min(rows.length, i+size); j++){
-					//System.out.println(i+","+j+" ["+size+"] ("+rows[j]+")");
-					//System.out.flush();
-					tempRows[j%size]=rows[j];
-					//HBaseInputSplit hbi  = new HBaseInputSplit(rows)
-				}
-				//System.out.println("");
-				res.add(new MultiRowInputSplit(tempRows));
+			long[] tempRows = new long[newSize];
+			for(int j=i; j<Math.min(rows.length, i+size); j++){
+				tempRows[j%size]=rows[j];
 			}
-		}catch(Exception e){
-			e.printStackTrace();
+
+			res.add(new MultiRowInputSplit(tempRows));
 		}
 		return res;
 	}
