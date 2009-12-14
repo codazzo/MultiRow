@@ -33,9 +33,15 @@ import org.apache.hadoop.mapreduce.TaskAttemptContext;
  *
  */
 public class MultiRowInputFormat extends InputFormat<LongWritable, Text>{
-	static int size=100; //default value: you should always change this
-	static long[] rows;
-
+	private static int size=100; //default value: you should always change this
+	private static long[] rows; //these are ALL the rows we want to process
+	
+	
+	/**
+	 * Call this method before submitting the job to set the whole array of rows to be processed.
+	 * 
+	 * @param myRows The whole set of rows we want to process.
+	 */
 	public static void setValues(long[] myRows){
 		rows = myRows;
 	}
@@ -62,12 +68,12 @@ public class MultiRowInputFormat extends InputFormat<LongWritable, Text>{
 		for(int i=0; i<rows.length; i=i+size){
 			int newSize = Math.min(size, (Math.min(rows.length, i+size)-i)); //this... is actually right
 
-			long[] tempRows = new long[newSize];
+			long[] splitRows = new long[newSize];
 			for(int j=i; j<Math.min(rows.length, i+size); j++){
-				tempRows[j%size]=rows[j];
+				splitRows[j%size]=rows[j];
 			}
 
-			res.add(new MultiRowInputSplit(tempRows));
+			res.add(new MultiRowInputSplit(splitRows));
 		}
 		return res;
 	}

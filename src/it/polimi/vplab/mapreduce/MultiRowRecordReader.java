@@ -17,12 +17,12 @@ import org.apache.hadoop.mapreduce.TaskAttemptContext;
  *
  */
 public class MultiRowRecordReader extends RecordReader<LongWritable, Text> {
-	int pos;
-	long[] rows;
+	int pos; //how many rows we've read so far
+	long[] rows; //the set of rows this reader had to process (it's set by the constructor)
 
-	public MultiRowRecordReader(MultiRowInputSplit hbis){
+	public MultiRowRecordReader(MultiRowInputSplit split){
 		this.pos=-1;
-		this.rows=hbis.getRows();
+		this.rows=split.getRows();
 	}
 
 	@Override
